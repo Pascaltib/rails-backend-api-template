@@ -28,7 +28,7 @@ AllCops:
     - 'support/**/*'
     - 'tmp/**/*'
     - 'test/**/*'
-    - vendor/*/**
+    - 'vendor/**/*'
 
 # Set maximum line length
 Layout/LineLength:
