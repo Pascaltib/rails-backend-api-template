@@ -42,13 +42,7 @@ jobs:
           bundler-cache: true
       - name: Set up database schema
         run: bin/rails db:create db:migrate
-      - name: Precompile assets
-        run: bundle exec rake assets:precompile
       - name: Run tests
-        # TODO: go_premium_spec doesn't run in GH actions because it uses
-        # selenium_chrome instead of headless mode. Need figure out how
-        # to run it, until then ignore that spec
-        # run: bundle exec rspec
         run: bundle exec rspec
   lint:
     runs-on: ubuntu-latest
