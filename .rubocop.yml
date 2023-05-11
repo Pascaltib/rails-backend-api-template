@@ -1,0 +1,32 @@
+# The behavior of RuboCop can be controlled via the .rubocop.yml
+# configuration file. It makes it possible to enable/disable
+# certain cops (checks) and to alter their behavior if they accept
+# any parameters. The file can be placed either in your home
+# directory or in some project directory.
+#
+# RuboCop will start looking for the configuration file in the directory
+# where the inspected file is and continue its way up to the root directory.
+#
+# See https://docs.rubocop.org/rubocop/configuration
+require: rubocop-rails
+
+# Disable documentation comment requirement
+Style/Documentation:
+  Enabled: false
+
+# Exclude certain directories and files from checks
+AllCops:
+  NewCops: enable
+  Exclude:
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'config/**/*'
+    - 'node_modules/**/*'
+    - 'script/**/*'
+    - 'support/**/*'
+    - 'tmp/**/*'
+    - 'test/**/*'
+
+# Set maximum line length
+Layout/LineLength:
+  Max: 120
