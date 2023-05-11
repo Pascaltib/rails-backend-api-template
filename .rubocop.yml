@@ -28,6 +28,7 @@ AllCops:
     - 'support/**/*'
     - 'tmp/**/*'
     - 'test/**/*'
+    - vendor/**/*.rb
 
 # Set maximum line length
 Layout/LineLength:
