@@ -65,7 +65,7 @@ jobs:
         with:
           bundler-cache: true
       - name: Lint Ruby files
-        run: bundler exec rubocop --fail-level error # only fail on error
+        run: bundler exec rubocop
       - name: Security audit application code
         run: bundler exec brakeman -q -w2
       - name: Security audit dependencies
