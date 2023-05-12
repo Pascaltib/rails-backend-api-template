@@ -2,6 +2,7 @@
 
 module Users
   class SessionsController < Devise::SessionsController
+    include RackSessionFix
     respond_to :json
 
     private
