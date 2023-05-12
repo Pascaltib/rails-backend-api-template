@@ -33,6 +33,7 @@ jobs:
       DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
       CI: enabled # will trigger eager-loading of the app
       # App Environment Variables
+      SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
