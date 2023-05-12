@@ -73,3 +73,6 @@ sh cp git-hooks/* .git/hooks/
 2. Make sure the hooks are executable:
 
 sh chmod +x .git/hooks/*
+
+## JWT Devise guide
+https://dakotaleemartinez.com/tutorials/devise-jwt-api-only-mode-for-authentication/

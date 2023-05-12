@@ -33,3 +33,5 @@ AllCops:
 # Set maximum line length
 Layout/LineLength:
   Max: 120
+Metrics/MethodLength:
+  Max: 20
