@@ -11,7 +11,7 @@
 require:
   - rubocop-rails
   - rubocop-rspec
-
+  - rubocop-performance
 # Disable documentation comment requirement
 Style/Documentation:
   Enabled: false
