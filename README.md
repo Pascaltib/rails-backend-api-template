@@ -66,13 +66,24 @@ sh rspec
 
 After cloning the repository, you'll need to set up the Git hooks:
 
-1. Copy the hooks from the repo into the .git/hooks directory:
+1. Navigate to your project's directory and then into the .git/hooks directory:
 
-sh cp git-hooks/* .git/hooks/
+sh cd ./.git/hooks
 
-2. Make sure the hooks are executable:
+2. Create a new file named pre-commit (without any extension):
 
-sh chmod +x .git/hooks/*
+sh touch pre-commit
+
+3. Open this file in your favorite text editor, and add the following script:
+
+```
+#!/bin/sh
+git diff --cached --name-only | xargs -I {} rubocop --force-exclusion {}
+```
+
+4. Make sure the hooks are executable:
+
+sh chmod +x pre-commit
 
 ## JWT Devise guide
 https://dakotaleemartinez.com/tutorials/devise-jwt-api-only-mode-for-authentication/
