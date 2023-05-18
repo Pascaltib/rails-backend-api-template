@@ -5,18 +5,10 @@ module Users
     include RackSessionFix
     respond_to :json
 
-    # POST /resource/sign_in
-    def create
-      super do |resource|
-        # Make sure trackable devise module works with json api
-        resource.update_tracked_fields!(request) if resource.persisted?
-        respond_with(resource)
-      end
-    end
-
     private
 
     def respond_with(resource, _opts = {})
+      # resource.update_tracked_fields!(request)
       render json: {
         status: { code: 200, message: 'Logged in sucessfully.' },
         data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
