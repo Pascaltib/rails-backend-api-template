@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_12_172439) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_18_160944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,17 +19,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_12_172439) do
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "jti", null: false
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "jti", null: false
+    t.string "phone_number", default: "", null: false
+    t.integer "auth_method"
+    t.index ["email"], name: "index_users_on_email", unique: true, where: "((email)::text <> ''::text)"
     t.index ["jti"], name: "index_users_on_jti", unique: true
+    t.index ["phone_number"], name: "index_users_on_phone_number", unique: true, where: "((phone_number)::text <> ''::text)"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
