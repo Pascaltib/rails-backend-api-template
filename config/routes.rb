@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
+  post '/verify_phone', to: 'verifications#send_phone_verification'
+  post '/check_otp', to: 'verifications#verify_otp'
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
