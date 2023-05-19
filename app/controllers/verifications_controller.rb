@@ -14,7 +14,7 @@ class VerificationsController < ApplicationController
     begin
       verification = TwilioClient.verify
                                  .v2
-                                 .services('VA5539cfc9f1eea1c3148c264c92c78b87')
+                                 .services(ENV.fetch('TWILIO_VERIFY_SERVICE_SID'))
                                  .verifications
                                  .create(to: phone_number, channel: 'sms')
 
@@ -48,7 +48,7 @@ class VerificationsController < ApplicationController
   def get_verification_check(phone_number, otp_code)
     TwilioClient.verify
                 .v2
-                .services('VA5539cfc9f1eea1c3148c264c92c78b87')
+                .services(ENV.fetch('TWILIO_VERIFY_SERVICE_SID'))
                 .verification_checks
                 .create(to: phone_number, code: otp_code)
   end
