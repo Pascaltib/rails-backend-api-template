@@ -5,6 +5,8 @@ module Users
     include RackSessionFix
     respond_to :json
 
+    before_action :validate_auth_params, only: :create # rubocop:disable Rails/LexicallyScopedActionFilter
+
     private
 
     def respond_with(resource, _opts = {})
@@ -28,6 +30,15 @@ module Users
         }, status: :unauthorized
       end
     end
+
+    def validate_auth_params
+      return if params.dig(:user, :login).present? && params.dig(:user, :auth_method).present?
+
+      render json: {
+        status: { code: 422, message: 'Missing parameters for authentication. Should be login and password' }
+      }, status: :unprocessable_entity
+    end
+
     # before_action :configure_sign_in_params, only: [:create]
 
     # GET /resource/sign_in

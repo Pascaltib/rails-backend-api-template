@@ -9,19 +9,24 @@ class User < ApplicationRecord
 
   # Validations
   validates :auth_method, presence: true
-  validates :email, presence: true, if: -> { email? }, uniqueness: { case_sensitive: false }, allow_blank: true
-  validates :phone_number, presence: true, if: -> { phone_number? }, uniqueness: true, allow_blank: true
+  validates :email, format: { with: /\A[^@\s]+@[^@\s]+\z/, message: :invalid, allow_blank: true },
+                    uniqueness: { case_sensitive: false, allow_blank: true }
+  validates :phone_number, format: { with: /\A\+\d{1,3}\d{4,14}(?:x\d+)?\z/, message: :invalid, allow_blank: true },
+                           uniqueness: { allow_blank: true }
+  validate :email_or_phone_required
+  validate :email_required_if_email_auth_method
+  validate :phone_required_if_phone_auth_method
 
   # Callbacks
   before_validation :set_auth_method, on: :create
 
-  # Devise overrides
+  # Devise validatable override
   def email_required?
-    false
+    auth_method == 'email'
   end
 
-  def email_changed?
-    false
+  def phone_required?
+    auth_method == 'phone_number'
   end
 
   # Devise override to allow login with email or phone_number
@@ -42,5 +47,23 @@ class User < ApplicationRecord
 
   def set_auth_method
     self.auth_method = phone_number.present? ? :phone_number : :email
+  end
+
+  def email_or_phone_required
+    return if email.present? || phone_number.present?
+
+    errors.add(:base, :email_or_phone_required)
+  end
+
+  def email_required_if_email_auth_method
+    return unless email_required? && email.blank?
+
+    errors.add(:email, :required)
+  end
+
+  def phone_required_if_phone_auth_method
+    return unless phone_required? && phone_number.blank?
+
+    errors.add(:phone_number, :required)
   end
 end

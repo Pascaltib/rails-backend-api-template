@@ -30,4 +30,14 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            base:
+              email_or_phone_required: "Email or Phone number must be present"
+            email:
+              required: "must be present when authentication method is email"
+            phone_number:
+              required: "must be present when authentication method is phone number"

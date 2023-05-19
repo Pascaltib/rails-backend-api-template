@@ -55,10 +55,9 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'rspec-rails', '~> 6.0.0'
 
-  # linting packages
+  # linting and security
   gem 'brakeman'
   gem 'bundler-audit', '~> 0.9.1'
-
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
@@ -70,4 +69,9 @@ group :development do
   # gem "spring"
 
   gem 'bullet'
+end
+
+group :test do
+  gem 'factory_bot_rails'
+  gem 'faker'
 end
