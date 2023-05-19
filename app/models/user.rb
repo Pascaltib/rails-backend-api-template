@@ -7,14 +7,15 @@ class User < ApplicationRecord
 
   enum auth_method: { email: 0, phone_number: 1 }
 
+  # Validations
+  validates :auth_method, presence: true
+  validates :email, presence: true, if: -> { email? }, uniqueness: { case_sensitive: false }, allow_blank: true
+  validates :phone_number, presence: true, if: -> { phone_number? }, uniqueness: true, allow_blank: true
+
+  # Callbacks
   before_validation :set_auth_method, on: :create
 
-  validates :auth_method, presence: true
-  validates :email, presence: true, if: -> { email? }
-  validates :email, uniqueness: { case_sensitive: false }, allow_blank: true
-  validates :phone_number, presence: true, if: -> { phone_number? }
-  validates :phone_number, uniqueness: true, allow_blank: true
-
+  # Devise overrides
   def email_required?
     false
   end
@@ -23,6 +24,7 @@ class User < ApplicationRecord
     false
   end
 
+  # Devise override to allow login with email or phone_number
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     login = conditions.delete(:login)
