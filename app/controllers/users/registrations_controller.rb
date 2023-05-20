@@ -6,7 +6,6 @@ module Users
     respond_to :json
 
     def update_password
-      Rails.logger.debug current_user
       return unless current_user.update(password_params)
 
       render json: { message: 'Password updated successfully.' }, status: :ok

@@ -7,6 +7,11 @@ describe Users::RegistrationsController, type: :request do
   let(:existing_user) { create_user }
   let(:signup_url) { '/signup' }
 
+  let(:headers) do
+    login_with_api(existing_user)
+    { Authorization: response.headers['Authorization'] }
+  end
+
   context 'when creating a new user' do
     before do
       post signup_url, params: {
@@ -42,6 +47,31 @@ describe Users::RegistrationsController, type: :request do
 
     it 'returns 422 unprocessable entity' do
       expect(response).to have_http_status(:unprocessable_entity)
+    end
+  end
+
+  describe 'PATCH #update_password' do
+    context 'when new password is provided' do
+      let(:new_password) { 'new_password' }
+
+      before do
+        patch '/update_password', params: {
+          user: { password: new_password }
+        }, headers:
+      end
+
+      it 'returns ok status' do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a success message' do
+        expect(response.parsed_body['message']).to eq('Password updated successfully.')
+      end
+
+      it 'updates the password' do
+        existing_user.reload
+        expect(existing_user).to be_valid_password(new_password)
+      end
     end
   end
 end
