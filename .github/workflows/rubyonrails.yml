@@ -34,6 +34,9 @@ jobs:
       CI: enabled # will trigger eager-loading of the app
       # App Environment Variables
       SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+      TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+      TWILIO_VERIFY_SERVICE_SID: ${{ secrets.TWILIO_VERIFY_SERVICE_SID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
