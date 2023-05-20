@@ -5,6 +5,13 @@ module Users
     include RackSessionFix
     respond_to :json
 
+    def update_password
+      Rails.logger.debug current_user
+      return unless current_user.update(password_params)
+
+      render json: { message: 'Password updated successfully.' }, status: :ok
+    end
+
     private
 
     def respond_with(resource, _opts = {})
@@ -28,6 +35,10 @@ module Users
           }
         }, status: :unprocessable_entity
       end
+    end
+
+    def password_params
+      params.require(:user).permit(:password)
     end
 
     # before_action :configure_sign_up_params, only: [:create]

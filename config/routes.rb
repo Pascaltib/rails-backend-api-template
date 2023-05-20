@@ -11,6 +11,10 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  post '/verify_phone', to: 'verifications#send_phone_verification'
-  post '/check_otp', to: 'verifications#verify_otp'
+  devise_scope :user do
+    patch '/update_password', to: 'users/registrations#update_password'
+  end
+
+  post '/verify_phone_number', to: 'verifications#send_phone_verification'
+  post '/verify_otp', to: 'verifications#verify_otp'
 end

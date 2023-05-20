@@ -6,7 +6,7 @@ class ApplicationController < ActionController::API
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   # Pundit: allow-list approach
-  after_action :verify_authorized, except: :index, unless: :skip_pundit?
+  after_action :verify_authorized, only: %i[show new edit create update destroy], unless: :skip_pundit?
   after_action :verify_policy_scoped, only: :index, unless: :skip_pundit?
 
   rescue_from ActiveRecord::RecordNotFound, with: :not_found

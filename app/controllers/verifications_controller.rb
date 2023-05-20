@@ -62,9 +62,11 @@ class VerificationsController < ApplicationController
   end
 
   def create_user(phone_number)
-    user = User.new(phone_number:)
+    user = User.new(phone_number:, password: Devise.friendly_token.first(8))
     if user.save
-      render json: { message: 'OTP verification successful. User created.' }, status: :ok
+      jwt_token, _jwt_payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
+      response.headers['Authorization'] = "Bearer #{jwt_token}"
+      render json: { message: "User with phone_number #{phone_number} created successfully." }, status: :ok
     else
       render json: { error: user.errors.full_messages.to_sentence }, status: :unprocessable_entity
     end
