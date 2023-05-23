@@ -17,6 +17,10 @@ describe Users::SessionsController, type: :request do
       expect(response.headers['Authorization']).to be_present
     end
 
+    it 'returns a new refresh token' do
+      expect(response.body['refresh_token']).not_to be_nil
+    end
+
     it 'returns 200' do
       expect(response).to have_http_status(:ok)
     end
@@ -39,11 +43,24 @@ describe Users::SessionsController, type: :request do
   end
 
   context 'when logging out' do
-    it 'returns 200 ok' do
+    it 'returns 200 ok and destroys associated refresh tokens' do
       login_with_api(user)
       headers = { Authorization: response.headers['Authorization'] }
-      delete(logout_url, headers:)
+      expect { delete(logout_url, headers:) }.to change(RefreshToken, :count).by(-1)
       expect(response).to have_http_status(:ok)
+    end
+
+    it 'changes the jti after logout' do
+      # Sign in user and capture the JWT and its jti
+      login_with_api(user)
+
+      # Sign out user
+      delete logout_url, headers: { Authorization: response.headers['Authorization'] }
+
+      get('/current_user', headers: { Authorization: response.headers['Authorization'] })
+
+      # Expect to receive an Unauthorized error
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end

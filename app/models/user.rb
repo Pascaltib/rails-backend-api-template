@@ -20,6 +20,8 @@ class User < ApplicationRecord
   # Callbacks
   before_validation :set_auth_method, on: :create
 
+  has_many :refresh_tokens, dependent: :destroy
+
   # Devise validatable override
   def email_required?
     auth_method == 'email'
@@ -41,6 +43,17 @@ class User < ApplicationRecord
                          { phone_number: login }
                        end
     where(conditions).where(where_conditions).first
+  end
+
+  def generate_refresh_token!
+    refresh_tokens.create!(token: SecureRandom.hex(20), expires_at: 2.weeks.from_now)
+  end
+
+  def jwt_revoked?(jwt)
+    jti = decoded_jwt(jwt)['jti']
+    user = User.find_by(jti:)
+
+    user.nil?
   end
 
   private

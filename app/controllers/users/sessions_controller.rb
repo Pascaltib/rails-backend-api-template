@@ -10,15 +10,18 @@ module Users
     private
 
     def respond_with(resource, _opts = {})
-      # resource.update_tracked_fields!(request)
+      refresh_token = resource.generate_refresh_token!
+
       render json: {
         status: { code: 200, message: 'Logged in sucessfully.' },
-        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes],
+        refresh_token: refresh_token.token
       }, status: :ok
     end
 
     def respond_to_on_destroy
       if current_user
+        current_user.refresh_tokens.destroy_all
         render json: {
           status: 200,
           message: 'logged out successfully'

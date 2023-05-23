@@ -15,25 +15,39 @@ module Users
 
     def respond_with(resource, _opts = {})
       if request.method == 'POST' && resource.persisted?
-        render json: {
-          status: { code: 200, message: 'Signed up sucessfully.' },
-          data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
-        }, status: :ok
+        handle_successful_signup(resource)
       elsif request.method == 'DELETE'
-        render json: {
-          status: {
-            code: 200,
-            message: 'Account deleted successfully.'
-          }
-        }, status: :ok
+        handle_successful_account_deletion
       else
-        render json: {
-          status: {
-            code: 422,
-            message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}"
-          }
-        }, status: :unprocessable_entity
+        handle_failed_signup(resource)
       end
+    end
+
+    def handle_successful_signup(resource)
+      refresh_token = resource.generate_refresh_token!
+      render json: {
+        status: { code: 200, message: 'Signed up sucessfully.' },
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes],
+        refresh_token: refresh_token.token
+      }, status: :ok
+    end
+
+    def handle_successful_account_deletion
+      render json: {
+        status: {
+          code: 200,
+          message: 'Account deleted successfully.'
+        }
+      }, status: :ok
+    end
+
+    def handle_failed_signup(resource)
+      render json: {
+        status: {
+          code: 422,
+          message: "User couldn't be created successfully. #{resource.errors.full_messages.to_sentence}"
+        }
+      }, status: :unprocessable_entity
     end
 
     def password_params

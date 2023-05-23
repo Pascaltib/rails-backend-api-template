@@ -33,6 +33,10 @@ describe Users::RegistrationsController, type: :request do
     it 'returns the user email' do
       expect(response.parsed_body['data']['email']).to eq(user.email)
     end
+
+    it 'returns a new refresh token' do
+      expect(response.parsed_body['refresh_token']).not_to be_nil
+    end
   end
 
   context 'when an email already exists' do
@@ -74,4 +78,15 @@ describe Users::RegistrationsController, type: :request do
       end
     end
   end
+
+  # Todo when account deletion is implemented
+  # describe 'DELETE #destroy' do
+  #   before { login_with_api(existing_user) }
+
+  #   it 'destroys associated refresh tokens' do
+  #     expect {
+  #       delete '/users', headers: headers
+  #     }.to change { RefreshToken.count }.by(-1)
+  #   end
+  # end
 end

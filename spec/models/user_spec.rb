@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'factory_bot_rails'
 
-# rubocop:disable Rspec/InstanceVariable
+# rubocop:disable RSpec/InstanceVariable
 RSpec.describe User do
   let(:user_email) { create_user }
   let(:user_phone) { create_user_with_phone_number }
@@ -160,5 +161,21 @@ RSpec.describe User do
       end
     end
   end
+
+  describe 'associations' do
+    it 'has many refresh_tokens and destroys them when destroyed' do
+      refresh_token = FactoryBot.create(:refresh_token, user: user_email) # rubocop:disable RSpec/FactoryBot/SyntaxMethods
+      expect(user_email.refresh_tokens).to include(refresh_token)
+    end
+  end
+
+  describe 'destroy' do
+    it 'destroys associated refresh tokens' do
+      FactoryBot.create(:refresh_token, user: user_email) # rubocop:disable RSpec/FactoryBot/SyntaxMethods
+      expect do
+        user_email.destroy!
+      end.to change { user_email.refresh_tokens.count }.by(-1)
+    end
+  end
 end
-# rubocop:enable Rspec/InstanceVariable
+# rubocop:enable RSpec/InstanceVariable

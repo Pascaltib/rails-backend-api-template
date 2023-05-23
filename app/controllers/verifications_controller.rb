@@ -64,6 +64,7 @@ class VerificationsController < ApplicationController
   def create_user(phone_number)
     user = User.new(phone_number:, password: Devise.friendly_token.first(8))
     if user.save
+      user.update!(jti: SecureRandom.uuid)
       jwt_token, _jwt_payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
       response.headers['Authorization'] = "Bearer #{jwt_token}"
       render json: { message: "User with phone_number #{phone_number} created successfully." }, status: :ok
