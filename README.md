@@ -19,6 +19,8 @@ This is a Ruby on Rails API application. This application uses Rails version 7.0
 
  If you are creating a new github repo, I would recommend adding dependabot to the repository. In GitHub go to security -> dependabot -> configure -> manage repository vulnerability settings. Enable dependency graph, dependabot alerts, and dependabot security updates. If a gem version has a security alert, dependabot will automatically create a pull request with the version fix.
 
+#Installation
+
 ## PostgreSQL
 
 The project is using PostgreSQL relational database along with ActiveRecord as
