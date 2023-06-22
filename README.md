@@ -2,6 +2,23 @@
 
 This is a Ruby on Rails API application. This application uses Rails version 7.0.4.3 and Ruby version 3.1.2.
 
+# Features
+- Rubocop (configured for rails and rspec)
+- CI/CD flows with GitHub actions including:
+  - Listing tests with rubocop
+  - Brakeman security scanner which detects common security risks in code
+  - Bundler audit to check for security vulnerabilities in gems
+  - Running rspec tests
+- Rate limiting (DDOS) protection using rack-attack
+- Devise and JWT:
+  - You can change JWT expiration time in config/initializers/devise.rb
+  - The devise jwt configuration uses the https://github.com/waiting-for-dev/devise-jwt#jtimatcher revocation strategy.
+- Two authentication flows
+  - Email or phone number signup and login
+  - OTP verification via Twilio API
+
+ If you are creating a new github repo, I would recommend adding dependabot to the repository. In GitHub go to security -> dependabot -> configure -> manage repository vulnerability settings. Enable dependency graph, dependabot alerts, and dependabot security updates. If a gem version has a security alert, dependabot will automatically create a pull request with the version fix.
+
 ## PostgreSQL
 
 The project is using PostgreSQL relational database along with ActiveRecord as
