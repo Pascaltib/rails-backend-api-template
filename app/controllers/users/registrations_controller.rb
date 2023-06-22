@@ -3,9 +3,11 @@
 module Users
   class RegistrationsController < Devise::RegistrationsController
     include RackSessionFix
+    include UserSignupHelper
     respond_to :json
 
     def update_password
+      # If JWT is valid then update user password with new password
       return unless current_user.update(password_params)
 
       render json: { message: 'Password updated successfully.' }, status: :ok
@@ -15,21 +17,13 @@ module Users
 
     def respond_with(resource, _opts = {})
       if request.method == 'POST' && resource.persisted?
+        # JWT added to header by devise-jwt gem
         handle_successful_signup(resource)
       elsif request.method == 'DELETE'
         handle_successful_account_deletion
       else
         handle_failed_signup(resource)
       end
-    end
-
-    def handle_successful_signup(resource)
-      refresh_token = resource.generate_refresh_token!
-      render json: {
-        status: { code: 200, message: 'Signed up sucessfully.' },
-        data: UserSerializer.new(resource).serializable_hash[:data][:attributes],
-        refresh_token: refresh_token.token
-      }, status: :ok
     end
 
     def handle_successful_account_deletion

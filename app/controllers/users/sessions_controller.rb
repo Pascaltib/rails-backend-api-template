@@ -10,6 +10,7 @@ module Users
     private
 
     def respond_with(resource, _opts = {})
+      # JWT added to header by devise-jwt gem
       refresh_token = resource.generate_refresh_token!
 
       render json: {

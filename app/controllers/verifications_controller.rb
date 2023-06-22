@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class VerificationsController < ApplicationController
+  include UserSignupHelper
   skip_before_action :authenticate_user!, only: %i[send_phone_verification verify_otp]
 
   def send_phone_verification
@@ -55,6 +56,7 @@ class VerificationsController < ApplicationController
 
   def handle_verification_check(verification_check, phone_number)
     if verification_check.status == 'approved'
+      # If user exists, sign in, else create user
       create_user(phone_number)
     else
       render json: { error: 'OTP verification failed.' }, status: :unprocessable_entity
@@ -64,10 +66,11 @@ class VerificationsController < ApplicationController
   def create_user(phone_number)
     user = User.new(phone_number:, password: Devise.friendly_token.first(8))
     if user.save
-      user.update!(jti: SecureRandom.uuid)
+      user.update!(jti: SecureRandom.uuid) # maybe add error handling here
       jwt_token, _jwt_payload = Warden::JWTAuth::UserEncoder.new.call(user, :user, nil)
       response.headers['Authorization'] = "Bearer #{jwt_token}"
-      render json: { message: "User with phone_number #{phone_number} created successfully." }, status: :ok
+
+      handle_successful_signup(user, message: 'Signed up successfully with phone number.')
     else
       render json: { error: user.errors.full_messages.to_sentence }, status: :unprocessable_entity
     end

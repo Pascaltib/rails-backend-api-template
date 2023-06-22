@@ -11,7 +11,6 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
 
-  # Refresh token
   post 'refresh_token', to: 'refresh_tokens#create'
 
   devise_scope :user do
